@@ -7,8 +7,8 @@ function handleAPILoaded() {
 function search() {
     var q = $('#query').val();
     var request = gapi.client.youtube.search.list({
-	q: q,
-	part: 'snippet',
+  	q: q,
+  	part: 'snippet',
     });
 
     request.execute(function (response) {
@@ -29,40 +29,37 @@ function search() {
             $(list_data).appendTo(".cont");
         });
 
-        var nicoJsonData =
+    });
+
+  //return Nico search data from ajax
+  function getData(){
+      var nicoJsonData =
         {
-          "query":"初音ミク",
+          "query":q,
           "service":[
             "video"
           ],
           "search":[
-            "title"
+            "title",
+            "tags"
           ],
           "join":[
             "cmsid",
             "title",
             "view_counter"
           ],
-          "filters":[
-            {
-              "type":"equal",
-              "field":"music_download",
-              "value":true
-            }
-          ],
           "from":0,
-          "size":3,
-          "sort_by":"view_counter",
+          "size":25,
+          "sort_by":"start_time",
+          "order": "desc",
           "issuer":"apiguide",
           "reason":"ma10"
         };
 
-        var nicoData = '';
-
-        console.log(JSON.stringify(nicoJsonData));
-        $.ajax({
+        var result ="";
+        return $.ajax({
             type: 'POST',
-            url: 'http://api.search.nicovideo.jp/api/',
+            url: 'http://api.search.nicovideo.jp/api',
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             data: JSON.stringify(nicoJsonData),
@@ -73,19 +70,47 @@ function search() {
             error: function(data) {
                 successmessage = 'Error';
                 alert(successmessage);
-                console.log(data);
-                nicoData = data;
             },
  
-        });
+        });;
 
-        console.log(nicoData);
-        var nicoVideoURL = 'http://www.nicovideo.jp/watch/';
-        var thumbURL = 'http://tn-skr3.smilevideo.jp/smile?i=';
-            $.getJSON(JSON.stringify(nicoData), function (data) {
-                alert(data);
-            });
-    });
-	
+  }
+
+
+
+  var nicoDataResult = getData().done();
+  //get data from nicoData so that it could extract responseText
+  nicoDataResult.error(function (data) {
+    nicoDataPartJson = data.responseText;
+
+    //since the returned data is only partially JSON we need to do some splitting and remove the unneeded info
+    var lines = nicoDataPartJson.split('\n');
+    //split and delete the first two lines
+    lines.splice(0,2);
+    //delete the last line
+    lines.splice(1,2);
+    //now the one line that is left is the one needed and it is in JSON format
+    var nicoDataJson = lines;
+
+    //now parse and appened to html
+    var nicoDataParsed = JSON.parse(nicoDataJson);
+    var nicoVideoURL = 'http://www.nicovideo.jp/watch/';
+    var thumbURL = 'http://tn-skr3.smilevideo.jp/smile?i=';
+    var nlist_data = "";
+
+    for(i = 0; i < 25; i++){
+
+      var nfeedTitle = nicoDataParsed.values[i].title;
+      var nvideoID = nicoDataParsed.values[i].cmsid;
+      var thumbID = nvideoID.replace('sm','');
+      var nurl = nicoVideoURL + nvideoID;
+      var nthumb = thumbURL + thumbID;
+
+      nlist_data += '<li><a href="' + nurl + '" title=""><img alt="' + nfeedTitle + '" src="' + nthumb + '">' + nfeedTitle.fontcolor("black") +'</a></li>';
+      
+      }    
+      $(nlist_data).appendTo(".nicoCont");
+  });
+
 }
 
