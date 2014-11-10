@@ -1,0 +1,29 @@
+.jumbotron {
+	background-color: #efefef;
+}
+
+.nav {
+	margin-top: 2px
+	}
+	
+.row-padded {
+  padding: 35px;
+  background-color: #F7F7F7;
+  font-size: 20px;
+  border: 1px solid #DDD;
+}
+
+.row-padded .youtube {
+  color: white;
+  background-color: #d9534f;
+}
+
+.row-padded .dailymotion {
+  color: white;
+  background-color: #428bca;
+}
+
+.row-padded .nicovideo {
+  color: #222;
+  background-color: #eee;
+}
