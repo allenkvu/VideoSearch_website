@@ -12,22 +12,26 @@ function search() {
     });
 
     request.execute(function (response) {
-		$(".cont").empty();
-		var playListURL = 'http://gdata.youtube.com/feeds/api/videos?q='+ q + '&alt=json&orderby=published';
-        var videoURL = 'http://www.youtube.com/watch?v=';
-		$.getJSON(playListURL, function (data) {
-            var list_data = "";
-            $.each(data.feed.entry, function (i, item) {
-                var feedTitle = item.title.$t;
-                var feedURL = item.link[1].href;
-                var fragments = feedURL.split("/");
-                var videoID = fragments[fragments.length - 2];
-                var url = videoURL + videoID;
-                var thumb = "http://img.youtube.com/vi/" + videoID + "/default.jpg";
-                list_data += '<li><a href="' + url + '" title=""><img alt="' + feedTitle + '" src="' + thumb + '">' + feedTitle.fontcolor("white") +'</a></li>';
-            });
-            $(list_data).appendTo(".cont");
-        });
+
+      //empty Nico video results so the previous searches dont append
+  		$(".cont").empty();
+      $(".nicoCont").empty();
+
+  		var playListURL = 'http://gdata.youtube.com/feeds/api/videos?q='+ q + '&alt=json&orderby=published';
+      var videoURL = 'http://www.youtube.com/watch?v=';
+  		$.getJSON(playListURL, function (data) {
+              var list_data = "";
+              $.each(data.feed.entry, function (i, item) {
+                  var feedTitle = item.title.$t;
+                  var feedURL = item.link[1].href;
+                  var fragments = feedURL.split("/");
+                  var videoID = fragments[fragments.length - 2];
+                  var url = videoURL + videoID;
+                  var thumb = "http://img.youtube.com/vi/" + videoID + "/default.jpg";
+                  list_data += '<li><a href="' + url + '" title=""><img alt="' + feedTitle + '" src="' + thumb + '">' + feedTitle.fontcolor("white") +'</a></li>';
+              });
+              $(list_data).appendTo(".cont");
+          });
 
     });
 
@@ -70,6 +74,7 @@ function search() {
             error: function(data) {
                 successmessage = 'Error';
                 alert(successmessage);
+                console.log(data);
             },
  
         });;
@@ -77,12 +82,11 @@ function search() {
   }
 
 
-
   var nicoDataResult = getData().done();
   //get data from nicoData so that it could extract responseText
   nicoDataResult.error(function (data) {
-    nicoDataPartJson = data.responseText;
 
+    nicoDataPartJson = data.responseText;
     //since the returned data is only partially JSON we need to do some splitting and remove the unneeded info
     var lines = nicoDataPartJson.split('\n');
     //split and delete the first two lines
