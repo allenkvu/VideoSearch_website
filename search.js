@@ -27,8 +27,9 @@ function search() {
                   var fragments = feedURL.split("/");
                   var videoID = fragments[fragments.length - 2];
                   var url = videoURL + videoID;
-                  var thumb = "http://img.youtube.com/vi/" + videoID + "/default.jpg";
-                  list_data += '<li><a href="' + url + '" title=""><img alt="' + feedTitle + '" src="' + thumb + '">' + feedTitle.fontcolor("white") +'</a></li>';
+                  var thumb = "http://img.youtube.com/vi/" + videoID + "/mqdefault.jpg";
+                  list_data += '<a href="' + url + '" title=""><img src="' + thumb + '" align="left" width="160" height="90" >' + feedTitle.fontcolor("white") + '<BR clear="all">' +'</a>';
+                  
               });
               $(list_data).appendTo(".cont");
           });
@@ -59,7 +60,7 @@ function search() {
           "issuer":"apiguide",
           "reason":"ma10"
         };
-
+        //console.log(JSON.stringify(nicoJsonData));
         var result ="";
         return $.ajax({
             type: 'POST',
@@ -73,7 +74,7 @@ function search() {
             },
             error: function(data) {
                 successmessage = 'Error';
-                alert(successmessage);
+                //alert(successmessage);
                 console.log(data);
             },
  
@@ -99,7 +100,7 @@ function search() {
     //now parse and appened to html
     var nicoDataParsed = JSON.parse(nicoDataJson);
     var nicoVideoURL = 'http://www.nicovideo.jp/watch/';
-    var thumbURL = 'http://tn-skr3.smilevideo.jp/smile?i=';
+    var thumbURL = 'http://tn-skr4.smilevideo.jp/smile?i=';
     var nlist_data = "";
 
     for(i = 0; i < 25; i++){
@@ -108,9 +109,9 @@ function search() {
       var nvideoID = nicoDataParsed.values[i].cmsid;
       var thumbID = nvideoID.replace('sm','');
       var nurl = nicoVideoURL + nvideoID;
-      var nthumb = thumbURL + thumbID;
+      var nthumb = thumbURL + thumbID + '.M';
 
-      nlist_data += '<li><a href="' + nurl + '" title=""><img alt="' + nfeedTitle + '" src="' + nthumb + '">' + nfeedTitle.fontcolor("black") +'</a></li>';
+      nlist_data += '<a href="' + nurl + '" title=""><img alt="' + nfeedTitle + '" src="' + nthumb + '" " align="left" width="160" height="90">' + nfeedTitle.fontcolor("black") + '<BR clear="all">' +'</a>';
       
       }    
       $(nlist_data).appendTo(".nicoCont");

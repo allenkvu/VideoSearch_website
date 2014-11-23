@@ -16,14 +16,21 @@
 .row-padded .youtube {
   color: white;
   background-color: #d9534f;
+  max-width:500px !important;
+}
+
+ul {
+  font-size: 15px;
 }
 
 .row-padded .dailymotion {
   color: white;
   background-color: #428bca;
+  max-width:500px !important;
 }
 
 .row-padded .nicovideo {
   color: #222;
   background-color: #eee;
+  max-width:500px !important;
 }
